@@ -51,7 +51,11 @@
     <div class="map-container">
         <h1>Hello</h1>
         <div><span id="content"></span></div>
-        <div id="map"></div>
+        <div id = 'map'></div>
+        <button id="myLocationBut" onclick="getMyLocation()" class="btn btn-secondary btn-lg">Get my location</button>
+        <h6>uncomfortable with this? try manually type your location below!</h6>
+        <input type="text" placeholder="enter your location/street name/postal code">
+        <div></div>
     </div>
 
 
@@ -61,5 +65,6 @@
     
 </body>
 <script src="js/getData.js"></script>
+<script src="js/displayMap.js"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHlRzdfgMvGjszjoE4zISUcUHDqXqup80&callback=initMap"></script>
 </html>

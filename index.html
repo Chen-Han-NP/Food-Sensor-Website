@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <style>
-      
+      @import url("https://fonts.googleapis.com/css?family=Roboto");
+      @import url("https://fonts.googleapis.com/css?family=Alata");
     </style>
 
     
@@ -58,14 +59,30 @@
 
 
     <div class="map-container">
-        <h1>Hello</h1>
         <div><span id="content"></span></div>
         <div id = 'map'></div>
-        <button id="myLocationBut" onclick="getMyLocation()" class="btn btn-secondary btn-lg">Get my location</button>
-        <h6>uncomfortable with this? try manually type your location below!</h6>
-        <input type="text" placeholder="enter your location/street name/postal code">
-        <div></div>
+        <div class="map-buttons align">
+          <button id="myLocationBut" onclick="getMyLocation()" class="btn btn-secondary btn-lg">Get my location</button>
+          <h6>OR</h6>
+          <input type="text" placeholder="Enter your street or postal code">
+          <button class="btn btn-primary btn-sms">Search</button>
+        </div>
+
+        <div class="display-loc align">
+          <h6>You are currently at : </h6>
+          <h6 id="location">Singapore</h6>
+        </div>
+
+        <div class="display-no-res align">
+          <h6>There are currently</h6>
+          <h6 id="no-of-res">0</h6>
+          <h6> Restaurants nearby</h6>
+        </div>
+
+
     </div>
+
+
 
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

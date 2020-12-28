@@ -1,3 +1,14 @@
+#my-input-searchbox {
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
+    font-size: 15px;
+    border-radius: 3px;
+    border: 0;
+    margin-top: 10px;
+    width: 270px;
+    height: 40px;
+    text-overflow: ellipsis;
+    padding: 0 1em;
+  }
 
 #map{
     height: 60vh;
@@ -10,7 +21,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 50px;
+    padding-top: 30px;
 }
 
 #myLocationBut{
@@ -24,17 +35,6 @@
     justify-content: center;
     align-items: center;
     
-}
-
-.map-buttons h6, .map-buttons input{
-    margin: 20px;
-}
-
-.map-buttons input{
-    height: 40px;
-    width: 250px;
-    font-family: Alata;
-    padding: 2px;
 }
 
 .display-loc h6, .display-no-res h6{

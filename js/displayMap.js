@@ -1,6 +1,8 @@
 
+let map;
 var latt = 1.352083;
 var lngg = 103.819839;
+var current_position = "Singapore";
 var zooms = 12;
 
 function setCoords(latt, lngg, zooms){
@@ -10,19 +12,20 @@ function setCoords(latt, lngg, zooms){
 }
 
 function initMap(){
-    const location = {lat: latt, lng: lngg};
-    const map = new google.maps.Map(document.getElementById("map"), {
+    var location = {lat: latt, lng: lngg};
+    map = new google.maps.Map(document.getElementById("map"), {
         zoom: zooms,
-        center: location
+        center: location,
+        gestureHandling: "auto"
     });
-    const marker = new google.maps.Marker({
+    var marker = new google.maps.Marker({
         position: location,
         map: map,
       });
     
     
     var input = document.getElementById('my-input-searchbox');
-    const searchBox = new google.maps.places.SearchBox(input);
+    var searchBox = new google.maps.places.SearchBox(input);
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
     // Bias the SearchBox results towards current map's viewport.
     map.addListener("bounds_changed", () => {
@@ -75,20 +78,12 @@ function initMap(){
       });
       map.fitBounds(bounds);
     });
-}
-/*
-let map, infoWindow;
 
-function initMap() {
-  map = new google.maps.Map(document.getElementById("map"), {
-    center: { lat: 1.352083, lng: 103.819839 },
-    zoom: 12,
-  });
+
   infoWindow = new google.maps.InfoWindow();
-  const locationButton = document.createElement("button");
-  locationButton.textContent = "Pan to Current Location";
-  locationButton.classList.add("custom-map-control-button");
-  map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
+  const locationButton = document.getElementById("myLocationBut");
+  //locationButton.classList.add("custom-map-control-button");
+  //map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
   locationButton.addEventListener("click", () => {
     // Try HTML5 geolocation.
     if (navigator.geolocation) {
@@ -97,11 +92,29 @@ function initMap() {
           const pos = {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
+
           };
+          latt = position.coords.latitude;
+          lngg = position.coords.longitude;
+          
+          let url = 'https://maps.googleapis.com/maps/api/geocode/json?key=' + 'AIzaSyCHlRzdfgMvGjszjoE4zISUcUHDqXqup80&latlng=' + latt + "," + lngg;
+          fetch(url)
+            .then(response => response.json())
+            .then(function (data){
+
+            console.log(data)
+            current_position = data.results[0]['formatted_address'];
+            infoWindow.setContent(`${current_position}`);
+          });
+          
+         
           infoWindow.setPosition(pos);
-          infoWindow.setContent("Location found.");
           infoWindow.open(map);
           map.setCenter(pos);
+          map.setZoom(19);
+
+          marker.ControlPosition(pos);
+          
         },
         () => {
           handleLocationError(true, infoWindow, map.getCenter());
@@ -114,7 +127,9 @@ function initMap() {
   });
 }
 
-function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+
+
+  function handleLocationError(browserHasGeolocation, infoWindow, pos) {
   infoWindow.setPosition(pos);
   infoWindow.setContent(
     browserHasGeolocation
@@ -122,5 +137,7 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
       : "Error: Your browser doesn't support geolocation."
   );
   infoWindow.open(map);
+
+
+    
 }
-*/

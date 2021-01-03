@@ -1,9 +1,12 @@
 
-let map;
+var map;
+var infowindow;
+
 var latt = 1.352083;
 var lngg = 103.819839;
 var current_position = "Singapore";
 var zooms = 12;
+
 
 function setCoords(latt, lngg, zooms){
   this.latt = latt;
@@ -80,7 +83,7 @@ function initMap(){
     });
 
 
-  infoWindow = new google.maps.InfoWindow();
+  infowindow = new google.maps.InfoWindow();
   const locationButton = document.getElementById("myLocationBut");
   //locationButton.classList.add("custom-map-control-button");
   //map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
@@ -104,40 +107,84 @@ function initMap(){
 
             console.log(data)
             current_position = data.results[0]['formatted_address'];
-            infoWindow.setContent(`${current_position}`);
+            infowindow.setContent(`${current_position}`);
           });
           
          
-          infoWindow.setPosition(pos);
-          infoWindow.open(map);
+          infowindow.setPosition(pos);
+          infowindow.open(map);
           map.setCenter(pos);
           map.setZoom(19);
 
-          marker.ControlPosition(pos);
+          var current_location = new google.maps.LatLng(latt, lngg);
+
+          var request =  {
+            location : current_location ,
+            radius : 550,
+            type : ['bank']
+            }
+
+          var service = new google.maps.places.PlacesService(map);
+          service.nearbySearch(request, callback);
+          
+          displayData();
+
+          
           
         },
         () => {
-          handleLocationError(true, infoWindow, map.getCenter());
+          handleLocationError(true, infowindow, map.getCenter());
         }
       );
     } else {
       // Browser doesn't support Geolocation
-      handleLocationError(false, infoWindow, map.getCenter());
+      handleLocationError(false, infowindow, map.getCenter());
     }
   });
 }
 
 
 
-  function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-  infoWindow.setPosition(pos);
-  infoWindow.setContent(
+function handleLocationError(browserHasGeolocation, infowindow, pos) {
+  infowindow.setPosition(pos);
+  infowindow.setContent(
     browserHasGeolocation
       ? "Error: The Geolocation service failed."
       : "Error: Your browser doesn't support geolocation."
   );
-  infoWindow.open(map);
-
-
+  infowindow.open(map);
     
+}
+
+//check the result of each search and create a marker for each found location
+function callback(results, status) {
+  if (status === google.maps.places.PlacesServiceStatus.OK) {
+    localStorage.clear();
+    for (var i = 0; i < results.length; i++) {
+        createMarker(results[i]);
+
+        var keyname = "results" + i;
+        localStorage.setItem(keyname, JSON.stringify(results[i]));
+    }
+      
+  }
+
+}
+
+function createMarker(place) {
+
+
+  var placeLoc = place.geometry.location;
+
+
+  var marker = new google.maps.Marker({
+      map : map,
+      position : place.geometry.location
+      
+  });
+
+  google.maps.event.addListener(marker, 'click', function() {
+      infowindow.setContent(place.name);
+      infowindow.open(map, this);
+  });
 }

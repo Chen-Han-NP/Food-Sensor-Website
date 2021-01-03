@@ -29,6 +29,11 @@
     
 }
 
+#viewResBut{
+    display: none;
+    margin: 20px;
+}
+
 .align{
     display: flex;
     flex-direction: row;
@@ -45,3 +50,4 @@
     font-weight: bold;
 
 }
+

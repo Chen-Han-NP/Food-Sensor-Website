@@ -8,6 +8,8 @@ var current_position = "Singapore";
 var zooms = 12;
 
 
+
+
 function setCoords(latt, lngg, zooms){
   this.latt = latt;
   this.lngg = lngg;
@@ -119,11 +121,13 @@ function initMap(){
           var current_location = new google.maps.LatLng(latt, lngg);
 
           var request =  {
-            location : current_location ,
-            radius : 550,
-            type : ['bank']
+            location : pos ,
+            //radius: '500',
+            type : ['restaurant'],  //restaurant, food, cafe, bakery
+            //openNow: true,
+            rankBy: google.maps.places.RankBy.DISTANCE
             }
-
+          
           var service = new google.maps.places.PlacesService(map);
           service.nearbySearch(request, callback);
           
@@ -157,17 +161,20 @@ function handleLocationError(browserHasGeolocation, infowindow, pos) {
 }
 
 //check the result of each search and create a marker for each found location
-function callback(results, status) {
+function callback(results, status, placeSearchPagination) {
   if (status === google.maps.places.PlacesServiceStatus.OK) {
     localStorage.clear();
     for (var i = 0; i < results.length; i++) {
         createMarker(results[i]);
-
         var keyname = "results" + i;
         localStorage.setItem(keyname, JSON.stringify(results[i]));
     }
       
   }
+
+  if (placeSearchPagination && placeSearchPagination.hasNextPage) {
+    placeSearchPagination.nextPage();
+  } 
 
 }
 

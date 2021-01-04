@@ -5,16 +5,8 @@ var infowindow;
 var latt = 1.352083;
 var lngg = 103.819839;
 var current_position = "Singapore";
-var zooms = 12;
+var zooms = 14;
 
-
-
-
-function setCoords(latt, lngg, zooms){
-  this.latt = latt;
-  this.lngg = lngg;
-  this.zooms = zooms;
-}
 
 function initMap(){
     var location = {lat: latt, lng: lngg};
@@ -118,14 +110,14 @@ function initMap(){
           map.setCenter(pos);
           map.setZoom(19);
 
-          var current_location = new google.maps.LatLng(latt, lngg);
+          var current_location = new google.maps.LatLng(pos.lat, pos.lng);
 
           var request =  {
             location : pos ,
-            //radius: '500',
-            type : ['restaurant'],  //restaurant, food, cafe, bakery
+            radius: '500',
+            type : ['food'],  //restaurant, food, cafe, bakery
             //openNow: true,
-            rankBy: google.maps.places.RankBy.DISTANCE
+            //rankBy: google.maps.places.RankBy.DISTANCE
             }
           
           var service = new google.maps.places.PlacesService(map);

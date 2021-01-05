@@ -1,4 +1,91 @@
+let current_lat = 1.352083;
+let current_lng = 103.819839;
+let map;
 
+$(document).ready(function () {
+
+  mapboxgl.accessToken = 'pk.eyJ1IjoiY2hhbmNlLW5wIiwiYSI6ImNramptc3NpbjFsZmQycW83Z2ZkeHg3ZDgifQ.lbjTyfFz_95mpdQbLpM6qg';
+  map = new mapboxgl.Map({
+    container: 'map', // container id
+    style: 'mapbox://styles/mapbox/streets-v11', // style URL
+    center: [current_lng, current_lat], // starting position [lng, lat]
+    zoom: 14 // starting zoom
+  });
+
+  
+  
+    const locationButton = document.getElementById("myLocationBut");
+    locationButton.addEventListener("click", () => {
+      targetUrl = "https://ipapi.co/json"
+      //targetUrl = "https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyCHlRzdfgMvGjszjoE4zISUcUHDqXqup80"
+      
+      $.ajax({
+        method: "GET",
+        url: targetUrl,
+      })
+        .done(function (data) {
+          console.log(data)
+            
+          current_lat = data.latitude;
+          current_lng = data.longitude;
+          
+          map.flyTo({
+            center: [current_lng, current_lat]
+            });
+          setMarker(current_lat, current_lng, map);
+        })
+      /*
+
+      fetch(targetUrl)
+      .then(response => response.json())
+      .then(function (data){
+        current_lat = data.latitude;
+        current_lng = data.longitude;
+        
+        map.flyTo({
+          center: [current_lng, current_lat]
+          });
+        setMarker(current_lat, current_lng, map);
+
+      });
+
+      */
+
+    });
+
+
+  
+
+  function setMarker(lat, lng, map1){
+    var marker = new mapboxgl.Marker()
+    .setLngLat([lng, lat])
+    .addTo(map1);
+  }
+
+  setMarker(current_lat, current_lng, map);
+
+  map.addControl(
+    new MapboxGeocoder({
+    accessToken: mapboxgl.accessToken,
+    mapboxgl: mapboxgl
+    })
+  );
+
+  
+  map.addControl(new mapboxgl.NavigationControl());
+
+  
+  
+
+  
+  
+
+
+  
+
+});
+
+/*
 var map;
 var infowindow;
 
@@ -190,3 +277,4 @@ function createMarker(place) {
       infowindow.open(map, this);
   });
 }
+*/

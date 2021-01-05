@@ -115,8 +115,8 @@ function initMap(){
           var request =  {
             location : pos ,
             radius: '500',
-            type : ['food'],  //restaurant, food, cafe, bakery
-            //openNow: true,
+            type : ['restaurant'],  //restaurant, food, cafe, bakery
+            openNow: true,
             //rankBy: google.maps.places.RankBy.DISTANCE
             }
           
@@ -124,6 +124,8 @@ function initMap(){
           service.nearbySearch(request, callback);
           
           displayData();
+
+          
 
           
           
@@ -158,6 +160,7 @@ function callback(results, status, placeSearchPagination) {
     localStorage.clear();
     for (var i = 0; i < results.length; i++) {
         createMarker(results[i]);
+        console.log(results[i]);
         var keyname = "results" + i;
         localStorage.setItem(keyname, JSON.stringify(results[i]));
     }

@@ -1,4 +1,6 @@
 Website name: Food Sensor
+GitHub Repo:      https://github.com/Chen-Han-NP/ID_S10202961_Chen-Han_Assg2_Website.git
+GitHub Page Link: https://chen-han-np.github.io/ID_S10202961_Chen-Han_Assg2_Website/
 
 Description:
 Food Sensor is a website that calls on Google Maps API that allow the user to locate their

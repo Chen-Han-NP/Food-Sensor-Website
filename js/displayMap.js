@@ -16,40 +16,28 @@ $(document).ready(function () {
   
     const locationButton = document.getElementById("myLocationBut");
     locationButton.addEventListener("click", () => {
-      targetUrl = "https://ipapi.co/json"
-      //targetUrl = "https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyCHlRzdfgMvGjszjoE4zISUcUHDqXqup80"
-      
-      $.ajax({
-        method: "GET",
-        url: targetUrl,
-      })
-        .done(function (data) {
-          console.log(data)
-            
-          current_lat = data.latitude;
-          current_lng = data.longitude;
+      // using html 5 geolocation to get the
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            };
+
+            current_lat = pos.lat;
+            current_lng = pos.lng;
           
-          map.flyTo({
-            center: [current_lng, current_lat]
-            });
-          setMarker(current_lat, current_lng, map);
+            map.flyTo({
+              center: [pos.lng, pos.lat],
+              zoom : 19
+              });
+
+            setMarker(pos.lat, pos.lng, map);
+
         })
-      /*
+      }
 
-      fetch(targetUrl)
-      .then(response => response.json())
-      .then(function (data){
-        current_lat = data.latitude;
-        current_lng = data.longitude;
-        
-        map.flyTo({
-          center: [current_lng, current_lat]
-          });
-        setMarker(current_lat, current_lng, map);
-
-      });
-
-      */
 
     });
 

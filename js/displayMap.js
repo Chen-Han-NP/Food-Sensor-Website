@@ -1,10 +1,14 @@
 let current_lat = 1.352083;
 let current_lng = 103.819839;
 let map;
+let popup;
+let accessToken = 'pk.eyJ1IjoiY2hhbmNlLW5wIiwiYSI6ImNramptc3NpbjFsZmQycW83Z2ZkeHg3ZDgifQ.lbjTyfFz_95mpdQbLpM6qg'
+
 
 $(document).ready(function () {
 
-  mapboxgl.accessToken = 'pk.eyJ1IjoiY2hhbmNlLW5wIiwiYSI6ImNramptc3NpbjFsZmQycW83Z2ZkeHg3ZDgifQ.lbjTyfFz_95mpdQbLpM6qg';
+  mapboxgl.accessToken = accessToken;
+  var mapboxClient = mapboxSdk({ accessToken: mapboxgl.accessToken });
   map = new mapboxgl.Map({
     container: 'map', // container id
     style: 'mapbox://styles/mapbox/streets-v11', // style URL
@@ -14,29 +18,54 @@ $(document).ready(function () {
 
   
   
-    const locationButton = document.getElementById("myLocationBut");
-    locationButton.addEventListener("click", () => {
-      // using html 5 geolocation to get the
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const pos = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            };
+  const locationButton = document.getElementById("myLocationBut");
+  locationButton.addEventListener("click", () => {
+    // using html 5 geolocation to get the current location
 
-            current_lat = pos.lat;
-            current_lng = pos.lng;
-          
-            map.flyTo({
-              center: [pos.lng, pos.lat],
-              zoom : 19
-              });
+    
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
 
-            setMarker(pos.lat, pos.lng, map);
+          current_lat = pos.lat;
+          current_lng = pos.lng;
 
-        })
-      }
+          console.log(pos.lat, pos.lng)
+        
+          map.flyTo({
+            center: [pos.lng, pos.lat],
+            zoom : 19
+            });
+
+          mapboxClient.geocoding
+          .reverseGeocode({
+            query: [pos.lng, pos.lat]
+          })
+          .send()
+          .then(function(response) {
+            if (
+              response &&
+              response.body &&
+              response.body.features &&
+              response.body.features.length
+            ) {
+              var feature = response.body.features[0];
+              console.log(feature)
+              setMarker(pos.lat, pos.lng, map);
+              popup = new mapboxgl.Popup({ closeOnClick: false })
+                .setLngLat([pos.lng, pos.lat])
+                .setHTML(`${feature.place_name}`)
+                .addTo(map);
+            }
+          });
+
+
+      })
+    }
 
 
     });

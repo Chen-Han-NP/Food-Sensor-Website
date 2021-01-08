@@ -17,9 +17,9 @@ function displayData(lat,lng){
                 var result = data.features[i];
                 var result_lat = result.geometry.coordinates[1];
                 var result_lng = result.geometry.coordinates[0];
-                $('#mySidebar').append(`<button type="button" class="btn btn-danger" onclick="navigateTo(${result_lat}, ${result_lng})">${result.text}</button>`)
+                $('#mySidebar').append(`<button type="button" class="btn btn-danger btn-sm" onclick="navigateTo(${result_lat}, ${result_lng})">${result.text}</button>`)
                 $('#mySidebar').append(`<p class='restaurant_cat'> Category: ${result.properties.category} </p>`)
-                $('#mySidebar').append(`<p class='restaurant_add'> ${result.properties.address} </p>`)
+                $('#mySidebar').append(`<a class='restaurant_add' href="javascript:void(0)" onclick="navigateTo(${result_lat}, ${result_lng})"> <u>${result.properties.address} </u></a>`)
                 
                 popup = new mapboxgl.Popup({ closeOnClick: false })
                 .setLngLat([result_lng, result_lat])

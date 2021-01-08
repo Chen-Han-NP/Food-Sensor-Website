@@ -12,37 +12,31 @@
   }
   
   .sidebar button {
-    margin: 32px 0px 2px 32px;  /*Change this for mobile*/
-    font-size: 25px;            /*Change this for mobile*/
+    margin: 32px 0px 2px 10px;  /*Change this for mobile*/
 
-    text-decoration: none;
     font-family: Alata;
-    color: black;
-    display: block;
-    transition: 0.2s;
-    font-weight: bold;
-    text-shadow: -0.3px 0 white, 0 0.3px white, 0.3px 0 white, 0 -0.3px white;
     
   }
   
-  .sidebar a:hover {
-    color: red;
-  }
 
   .sidebar .restaurant_cat{
     margin: 0px 0px 10px 16px;   /*Change this for mobile*/
-    font-size: 20px;            /*Change this for mobile*/
-
+    font-size: 16px;            /*Change this for mobile*/
+    font-family: Alata;
     color: black;
     display: block;
+    
   }
 
   .sidebar .restaurant_add{
+    font-family: Alata;
     margin: 0px 0px 10px 16px;   /*Change this for mobile*/
-    font-size: 20px;            /*Change this for mobile*/
+    font-size: 16px;            /*Change this for mobile*/
 
     color: black;
     display: block;
+
+    
   }
   
   .sidebar .closebtn {

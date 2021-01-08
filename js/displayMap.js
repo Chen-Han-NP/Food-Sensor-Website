@@ -4,103 +4,128 @@ let map;
 let popup;
 let accessToken = 'pk.eyJ1IjoiY2hhbmNlLW5wIiwiYSI6ImNramptc3NpbjFsZmQycW83Z2ZkeHg3ZDgifQ.lbjTyfFz_95mpdQbLpM6qg'
 
+//correct: 1.3209357000000002 103.76683399999999
 
-$(document).ready(function () {
 
-  mapboxgl.accessToken = accessToken;
-  var mapboxClient = mapboxSdk({ accessToken: mapboxgl.accessToken });
-  map = new mapboxgl.Map({
-    container: 'map', // container id
-    style: 'mapbox://styles/mapbox/streets-v11', // style URL
-    center: [current_lng, current_lat], // starting position [lng, lat]
-    zoom: 14 // starting zoom
-  });
 
-  
-  
-  const locationButton = document.getElementById("myLocationBut");
-  locationButton.addEventListener("click", () => {
-    // using html 5 geolocation to get the current location
+mapboxgl.accessToken = accessToken;
+var mapboxClient = mapboxSdk({ accessToken: mapboxgl.accessToken });
+map = new mapboxgl.Map({
+  container: 'map', // container id
+  style: 'mapbox://styles/mapbox/streets-v11', // style URL
+  center: [current_lng, current_lat], // starting position [lng, lat]
+  zoom: 14 // starting zoom
+});
 
-    
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const pos = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
 
-          current_lat = pos.lat;
-          current_lng = pos.lng;
 
-          console.log(pos.lat, pos.lng)
-        
-          map.flyTo({
-            center: [pos.lng, pos.lat],
-            zoom : 19
-            });
+const locationButton = document.getElementById("myLocationBut");
+const viewButton = document.getElementById("viewResResult");
 
-          mapboxClient.geocoding
-          .reverseGeocode({
-            query: [pos.lng, pos.lat]
-          })
-          .send()
-          .then(function(response) {
-            if (
-              response &&
-              response.body &&
-              response.body.features &&
-              response.body.features.length
-            ) {
-              var feature = response.body.features[0];
-              console.log(feature)
-              setMarker(pos.lat, pos.lng, map);
-              popup = new mapboxgl.Popup({ closeOnClick: false })
-                .setLngLat([pos.lng, pos.lat])
-                .setHTML(`${feature.place_name}`)
-                .addTo(map);
-            }
+locationButton.addEventListener("click", () => {
+  // using html 5 geolocation to get the current location
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const pos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+
+        current_lat = pos.lat;
+        current_lng = pos.lng;
+
+        console.log(pos.lat, pos.lng)
+      
+        map.flyTo({
+          center: [pos.lng, pos.lat],
+          zoom : 19
           });
 
+        //get the location info using geocoding api
+        mapboxClient.geocoding
+        .reverseGeocode({
+          query: [pos.lng, pos.lat]
+        })
+        .send()
+        .then(function(response) {
+          if (
+            response &&
+            response.body &&
+            response.body.features &&
+            response.body.features.length
+          ) {
+            var feature = response.body.features[0];
 
-      })
-    }
+            console.log(feature)
+            setMarker(pos.lat, pos.lng, map);
+            popup = new mapboxgl.Popup({ closeOnClick: false })
+              .setLngLat([pos.lng, pos.lat])
+              .setHTML(`${feature.place_name}`)
+              .addTo(map);
+
+            $('#viewResBut').css('display','flex');
+            displayData(current_lat, current_lng);
+            
+            
+          }
 
 
-    });
+        });
 
-
-  
-
-  function setMarker(lat, lng, map1){
-    var marker = new mapboxgl.Marker()
-    .setLngLat([lng, lat])
-    .addTo(map1);
+    },
+    
+    (error) => {
+      this.setState({ location: error, loading: false });
+      console.log(error);
+    },
+    
+    { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+    )
   }
 
-  setMarker(current_lat, current_lng, map);
-
-  map.addControl(
-    new MapboxGeocoder({
-    accessToken: mapboxgl.accessToken,
-    mapboxgl: mapboxgl
-    })
-  );
-
-  
-  map.addControl(new mapboxgl.NavigationControl());
-
-  
-  
-
-  
-  
 
 
   
-
 });
+
+
+setMarker(current_lat, current_lng, map);
+
+map.addControl(
+  new MapboxGeocoder({
+  accessToken: mapboxgl.accessToken,
+  mapboxgl: mapboxgl
+  })
+);
+
+map.addControl(new mapboxgl.NavigationControl());
+
+
+
+
+//functions
+function setMarker(lat, lng, map1){
+  var marker = new mapboxgl.Marker()
+  .setLngLat([lng, lat])
+  .addTo(map1);
+}
+
+
+
+
+
+function navigateTo(lat, lng){
+  map.flyTo({
+    center: [lng, lat],
+    zoom : 19
+    });
+  setMarker(lat, lng, map)
+}
+
+
+
 
 /*
 var map;

@@ -11,19 +11,39 @@
     padding-top: 60px;
   }
   
-  .sidebar a {
-    padding: 8px 8px 8px 32px;
+  .sidebar button {
+    margin: 32px 0px 2px 32px;  /*Change this for mobile*/
+    font-size: 25px;            /*Change this for mobile*/
+
     text-decoration: none;
-    font-size: 25px;
-    color: #818181;
+    font-family: Alata;
+    color: black;
     display: block;
-    transition: 0.3s;
+    transition: 0.2s;
+    font-weight: bold;
+    text-shadow: -0.3px 0 white, 0 0.3px white, 0.3px 0 white, 0 -0.3px white;
+    
   }
   
   .sidebar a:hover {
-    color: #f1f1f1;
+    color: red;
   }
 
+  .sidebar .restaurant_cat{
+    margin: 0px 0px 10px 16px;   /*Change this for mobile*/
+    font-size: 20px;            /*Change this for mobile*/
+
+    color: black;
+    display: block;
+  }
+
+  .sidebar .restaurant_add{
+    margin: 0px 0px 10px 16px;   /*Change this for mobile*/
+    font-size: 20px;            /*Change this for mobile*/
+
+    color: black;
+    display: block;
+  }
   
   .sidebar .closebtn {
     position: absolute;
@@ -32,6 +52,8 @@
     font-size: 36px;
     margin-left: 50px;
   }
+
+
 
   
   #main {

@@ -51,12 +51,16 @@ function displayData(current_lat,current_lng){
             var result_lng = result.geometry.coordinates[0];
 
             var distance = result.properties.distance;
+
             var place_info = result.place_name;
+            var place_info = place_info.replace("'","");
+            var place_info = place_info.replace('"',"");
+            var place_info = place_info.replace('\\',"");
             
-            $('#mySidebar').append(`<button type="button" class="btn btn-danger btn-sm" onclick="navigateTo(${result_lat}, ${result_lng}, ${place_info})">${result.text}</button>`)
+            $('#mySidebar').append(`<button type="button" class="btn btn-danger btn-sm" onclick="navigateTo(\'${place_info}\' ,${result_lat}, ${result_lng})">${result.text}</button>`)
             $('#mySidebar').append(`<p class='restaurant_cat'> Category: ${result.properties.category} </p>`)
             $('#mySidebar').append(`<p class='restaurant_dist'> Distance: ${distance}m</p>`)
-            $('#mySidebar').append(`<a class='restaurant_add' href="javascript:void(0)" onclick="navigateTo(${result_lat}, ${result_lng}, ${place_info})"> <u>${result.properties.address} </u></a>`)
+            $('#mySidebar').append(`<a class='restaurant_add' href="javascript:void(0)" onclick="navigateTo(\'${place_info}\' ,${result_lat}, ${result_lng})"> <u>${result.properties.address} </u></a>`)
             
             //create a popup
 

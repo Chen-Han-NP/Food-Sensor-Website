@@ -4,9 +4,11 @@ let map;
 let popup;
 let accessToken = 'pk.eyJ1IjoiY2hhbmNlLW5wIiwiYSI6ImNramptc3NpbjFsZmQycW83Z2ZkeHg3ZDgifQ.lbjTyfFz_95mpdQbLpM6qg'
 
-//correct: 1.3209357000000002 103.76683399999999
 
-
+//initialize the obstables that will be shown on the map
+var obstacle = turf.buffer(clearances, 0.25, { units: "kilometers" });
+var bbox = [0, 0, 0, 0];
+var polygon = turf.bboxPolygon(bbox);
 
 mapboxgl.accessToken = accessToken;
 var mapboxClient = mapboxSdk({ accessToken: mapboxgl.accessToken });
@@ -16,6 +18,52 @@ map = new mapboxgl.Map({
   center: [current_lng, current_lat], // starting position [lng, lat]
   zoom: 14 // starting zoom
 });
+
+//Loads the obstacles on the map
+map.on("load", function (e) {
+  map.addLayer({
+    id: "clearances",
+    type: "fill",
+    source: {
+      type: "geojson",
+      data: obstacle,
+    },
+    layout: {},
+    paint: {
+      "fill-color": "#f03b20",
+      "fill-opacity": 0.5,
+      "fill-outline-color": "#f03b20",
+    },
+  });
+
+  //Add a point indicating the starting point of the person;
+  map.addLayer({
+    id: 'point',
+    type: 'circle',
+    source: {
+      type: 'geojson',
+      data: {
+        type: 'FeatureCollection',
+        features: [{
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'Point',
+            coordinates: [current_lng, current_lat ]
+          }
+        }
+        ]
+      }
+    },
+    paint: {
+      'circle-radius': 10,
+      'circle-color': '#3887be'
+    }
+  });
+});
+
+
+
 
 
 
@@ -116,12 +164,86 @@ function setMarker(lat, lng, map1){
 
 
 
-function navigateTo(lat, lng){
-  map.flyTo({
-    center: [lng, lat],
-    zoom : 19
+function navigateTo(eLat, eLng, place_info){
+
+    var start = [current_lng, current_lat];
+    var end = [eLng, eLat]
+
+    map.flyTo({
+      center: [eLng, eLat],
+      zoom : 19
+      });
+    setMarker(eLat, eLng, map)
+    closeSideBar();
+
+    popup = new mapboxgl.Popup({ closeOnClick: false })
+    .setLngLat([eLng, eLat])
+    .setHTML(`<p>${place_info}</p>`)
+    .addTo(map);
+
+
+    
+
+
+    var url = `https://api.mapbox.com/directions/v5/mapbox/walking/${start[0]},${start[1]};${end[0]},${end[1]}?steps=true&geometries=geojson&access_token=${accessToken}`;
+    fetch(url)
+    .then(response => response.json())
+    .then(function (result){
+      var data = result.routes[0];
+      var route = data.geometry.coordinates;
+
+      console.log(route)
+
+      var geojson = {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'LineString',
+          coordinates: route
+        }
+      };
+
+      console.log(geojson);
+
+      // if the route already exists on the map, reset it using setData
+    if (map.getSource('route')) {
+      console.log("exist!")
+      map.getSource('route').setData(geojson);
+    } 
+    else { // otherwise, make a new request
+      console.log("not exist!")
+      map.addLayer({
+        id: 'route',
+        type: 'line',
+        source: {
+          type: 'geojson',
+          data: {
+            type: 'Feature',
+            properties: {},
+            geometry: {
+              type: 'LineString',
+              coordinates: geojson
+            }
+          }
+        },
+        layout: {
+          'line-join': 'round',
+          'line-cap': 'round'
+        },
+        paint: {
+          'line-color': '#3887be',
+          'line-width': 5,
+          'line-opacity': 0.75
+        }
+      });
+      map.getSource('route').setData(geojson);
+
+    }
+
     });
-  setMarker(lat, lng, map)
+
+
+
 }
 
 

@@ -27,7 +27,15 @@
     <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
+
+    <!-- Import Turf and Polyline -->
+    <script src="https://npmcdn.com/@turf/turf/turf.min.js"></script>
+    <script src=https://cdnjs.cloudflare.com/ajax/libs/mapbox-polyline/1.1.1/polyline.js></script>
+
     
+
+    <!-- Import Mapbox GL Directions -->
+    <script src=https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.2/mapbox-gl-directions.js></script>
     <script src="https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.min.js"></script>
     
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css" rel="stylesheet" />
@@ -105,8 +113,11 @@
       rel="stylesheet"
       href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css"
       type="text/css"/>
+
 </body>
 
+
+<script src="js/obstacles.js"></script>
 <script src="js/displayData.js"></script>
 <script src="js/displayMap.js"></script>
 
@@ -115,9 +126,7 @@
     document.getElementById("mySidebar").style.width = "300px";
     document.getElementById("main").style.marginRight = "300px";
 
-    
-
-    
+  
   }
 
   /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
@@ -125,6 +134,7 @@
     document.getElementById("mySidebar").style.width = "0";
     document.getElementById("main").style.marginRight = "0";
   }
+
 </script>
 
 

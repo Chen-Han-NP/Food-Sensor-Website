@@ -58,9 +58,19 @@ body{
  @media screen and (max-width: 768px) {
      #map{
         height: 70vh;
-        width: 100%;
+        width: 100vw;
         border: none;
         margin: none;
         padding: none;
      }
+     #myLocationBut{
+        font-size: 20px;
+        
+    }
+    
+    #viewResBut{
+        font-size: 20px;
+    }
+
+
   }

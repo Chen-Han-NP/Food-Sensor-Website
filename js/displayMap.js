@@ -5,6 +5,7 @@ let popup;
 let accessToken = 'pk.eyJ1IjoiY2hhbmNlLW5wIiwiYSI6ImNramptc3NpbjFsZmQycW83Z2ZkeHg3ZDgifQ.lbjTyfFz_95mpdQbLpM6qg'
 var currentMarkers = [];
 var currentPopups = [];
+let geocoder;
 
 //initialize the obstables that will be shown on the map
 var obstacle = turf.buffer(clearances, 0.25, { units: "kilometers" });
@@ -144,16 +145,28 @@ locationButton.addEventListener("click", () => {
 
 setMarker(current_lat, current_lng, map);
 
-map.addControl(
-  new MapboxGeocoder({
+//The search bar
+geocoder = new MapboxGeocoder({
   accessToken: mapboxgl.accessToken,
-  mapboxgl: mapboxgl
+  mapboxgl: mapboxgl,
+  placeholder: 'Enter location manually'
+
   })
-);
+map.addControl(geocoder);
+geocoder.on('result', function(result) {
 
+  current_lat = result.result.geometry.coordinates[1];
+  current_lng = result.result.geometry.coordinates[0];
+
+  clearData();
+  
+  displayData(current_lat, current_lng);
+
+})
+console.log(geocoder.getProximity)
+
+//Allow the user to zoom in/out
 map.addControl(new mapboxgl.NavigationControl());
-
-
 
 
 //functions
@@ -173,8 +186,26 @@ function setPopup(lat, lng, map1, text){
   currentPopups.push(popup)
 }
 
+function clearData(){
+  if (currentPopups!==null) {
+    for (var i = currentPopups.length - 1; i >= 0; i--) {
+      currentPopups[i].remove();
+    }
+  }
+
+  
+  if (currentMarkers!==null) {
+    for (var i = currentMarkers.length - 1; i >= 0; i--) {
+      currentMarkers[i].remove();
+    }
+}
 
 
+}
+
+
+
+//When a restaurant is selected, navigate to the place on the map.
 function navigateTo(placeInfo, eLat, eLng){
  
     var start = [current_lng, current_lat];
@@ -185,24 +216,13 @@ function navigateTo(placeInfo, eLat, eLng){
       zoom : 19
       });
 
-    if (currentMarkers!==null) {
-        for (var i = currentMarkers.length - 1; i >= 0; i--) {
-          currentMarkers[i].remove();
-        }
-    }
+    clearData();
+
     setMarker(eLat, eLng, map)
     closeSideBar();
 
-    
-    if (currentPopups!==null) {
-      for (var i = currentPopups.length - 1; i >= 0; i--) {
-        currentPopups[i].remove();
-      }
-    }
+  
     setPopup(eLat, eLng, map, placeInfo);
-    
-
-
     
 
     var url = `https://api.mapbox.com/directions/v5/mapbox/walking/${start[0]},${start[1]};${end[0]},${end[1]}?steps=true&geometries=geojson&access_token=${accessToken}`;

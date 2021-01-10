@@ -5,6 +5,8 @@ function displayData(current_lat,current_lng){
     //First, set the viewResult button to visible for the users
     $('#viewResBut').css('display','flex');
 
+
+
     //This list stores the original coordinates.
     var from = [current_lng, current_lat];
 
@@ -81,11 +83,11 @@ function displayData(current_lat,current_lng){
             var place_info = place_info.replace('"',"");
             var place_info = place_info.replace('\\',"");
             
-            $('#mySidebar').append(`<button type="button" class="btn btn-danger btn-sm" onclick="navigateTo(\'${place_info}\' ,${result_lat}, ${result_lng})">${result.text}</button>`)
-            $('#mySidebar').append(`<p class='restaurant_cat'> Category: ${result.properties.category} </p>`)
-            $('#mySidebar').append(`<p class='restaurant_dist'> Distance: ${distance}m</p>`)
-            $('#mySidebar').append(`<p class='restaurant_dist'> Esti. Duration: : ${duration}m</p>`)
-            $('#mySidebar').append(`<a class='restaurant_add' href="javascript:void(0)" onclick="navigateTo(\'${place_info}\' ,${result_lat}, ${result_lng})"> <u>${result.properties.address} </u></a>`)
+            $('#sidebarContent').append(`<button type="button" class="btn btn-danger btn-sm" onclick="navigateTo(\'${place_info}\' ,${result_lat}, ${result_lng})">${result.text}</button>`)
+            $('#sidebarContent').append(`<p class='restaurant_cat'> Category: ${result.properties.category} </p>`)
+            $('#sidebarContent').append(`<p class='restaurant_dist'> Distance: ${distance}m</p>`)
+            $('#sidebarContent').append(`<p class='restaurant_dist'> Esti. Duration: : ${duration}m</p>`)
+            $('#sidebarContent').append(`<a class='restaurant_add' href="javascript:void(0)" onclick="navigateTo(\'${place_info}\' ,${result_lat}, ${result_lng})"> <u>${result.properties.address} </u></a>`)
             
             //create a popup
 

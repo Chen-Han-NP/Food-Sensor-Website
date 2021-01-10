@@ -1,7 +1,9 @@
 let current_lat = 1.352083;
 let current_lng = 103.819839;
 let map;
-let popup;
+
+let userPopUp;
+let userMarker;
 let accessToken = 'pk.eyJ1IjoiY2hhbmNlLW5wIiwiYSI6ImNramptc3NpbjFsZmQycW83Z2ZkeHg3ZDgifQ.lbjTyfFz_95mpdQbLpM6qg'
 var currentMarkers = [];
 var currentPopups = [];
@@ -68,7 +70,7 @@ map.on("load", function (e) {
 
 
 
-
+//Control the two buttons
 const locationButton = document.getElementById("myLocationBut");
 const viewButton = document.getElementById("viewResResult");
 
@@ -90,10 +92,10 @@ locationButton.addEventListener("click", () => {
       
         map.flyTo({
           center: [pos.lng, pos.lat],
-          zoom : 19
+          zoom : 17
           });
 
-        //get the location info using geocoding api
+        //get the user's current location info using geocoding api
         mapboxClient.geocoding
         .reverseGeocode({
           query: [pos.lng, pos.lat]
@@ -106,24 +108,24 @@ locationButton.addEventListener("click", () => {
             response.body.features &&
             response.body.features.length
           ) {
-            var feature = response.body.features[0];
 
+            var feature = response.body.features[0];
             console.log(feature)
-            var marker = new mapboxgl.Marker()
+
+            clearPopupAndMarker();
+            clearEverything();
+
+            userMarker = new mapboxgl.Marker()
             .setLngLat([pos.lng, pos.lat])
             .addTo(map);
-            popup = new mapboxgl.Popup({ closeOnClick: false })
+
+            userPopUp = new mapboxgl.Popup({ closeOnClick: false })
               .setLngLat([pos.lng, pos.lat])
               .setHTML(`${feature.place_name}`)
               .addTo(map);
 
-            $('#viewResBut').css('display','flex');
             displayData(current_lat, current_lng);
-            
-            
           }
-
-
         });
 
     },
@@ -149,21 +151,36 @@ setMarker(current_lat, current_lng, map);
 geocoder = new MapboxGeocoder({
   accessToken: mapboxgl.accessToken,
   mapboxgl: mapboxgl,
-  placeholder: 'Enter location manually'
+  placeholder: 'Enter location manually',
+  setZoom: 18
 
   })
 map.addControl(geocoder);
+
+//When the search result is chosen by the user
 geocoder.on('result', function(result) {
 
   current_lat = result.result.geometry.coordinates[1];
   current_lng = result.result.geometry.coordinates[0];
+  place_name = result.result.text;
+  console.log(place_name);
 
-  clearData();
-  
+  clearPopupAndMarker();
+  clearEverything();
+
+  userMarker = new mapboxgl.Marker()
+  .setLngLat([current_lng, current_lat])
+  .addTo(map);
+
+  userPopUp = new mapboxgl.Popup({ closeOnClick: false })
+    .setLngLat([current_lng, current_lat])
+    .setHTML(`${place_name}`)
+    .addTo(map);
+
   displayData(current_lat, current_lng);
 
 })
-console.log(geocoder.getProximity)
+
 
 //Allow the user to zoom in/out
 map.addControl(new mapboxgl.NavigationControl());
@@ -178,7 +195,7 @@ function setMarker(lat, lng, map1){
 }
 
 function setPopup(lat, lng, map1, text){
-  var popup = new mapboxgl.Popup({ closeOnClick: false })
+  var popup = new mapboxgl.Popup({ closeOnClick: true })
   .setLngLat([lng, lat])
   .setHTML(`<p>${text}</p>`)
   
@@ -186,20 +203,39 @@ function setPopup(lat, lng, map1, text){
   currentPopups.push(popup)
 }
 
-function clearData(){
+//Make sure that when a different restaurant is chosen,
+//it won't show the popup and marker of the previous restaurant.
+function clearPopupAndMarker(){
+  closeSideBar();
   if (currentPopups!==null) {
     for (var i = currentPopups.length - 1; i >= 0; i--) {
       currentPopups[i].remove();
     }
   }
 
-  
   if (currentMarkers!==null) {
     for (var i = currentMarkers.length - 1; i >= 0; i--) {
       currentMarkers[i].remove();
     }
+  }
 }
 
+//Clear everything -  marker, popups and routes when the
+//user uses the search bar to find the nearest restaurant of a location.
+function clearEverything(){
+  if (userMarker){
+    userMarker.remove();
+  }
+  if (userPopUp){
+    userPopUp.remove();
+  }
+  if (map.getSource('route')) {
+    map.removeLayer('route');
+    map.removeSource('route');
+  }
+
+  $('#sidebarContent').empty();
+  $('#viewResBut').css('display','flex');
 
 }
 
@@ -207,16 +243,16 @@ function clearData(){
 
 //When a restaurant is selected, navigate to the place on the map.
 function navigateTo(placeInfo, eLat, eLng){
- 
+
     var start = [current_lng, current_lat];
     var end = [eLng, eLat]
 
     map.flyTo({
       center: [eLng, eLat],
-      zoom : 19
+      zoom : 17
       });
 
-    clearData();
+    clearPopupAndMarker();
 
     setMarker(eLat, eLng, map)
     closeSideBar();
@@ -224,7 +260,7 @@ function navigateTo(placeInfo, eLat, eLng){
   
     setPopup(eLat, eLng, map, placeInfo);
     
-
+    //Fetch the nearest route;
     var url = `https://api.mapbox.com/directions/v5/mapbox/walking/${start[0]},${start[1]};${end[0]},${end[1]}?steps=true&geometries=geojson&access_token=${accessToken}`;
     fetch(url)
     .then(response => response.json())

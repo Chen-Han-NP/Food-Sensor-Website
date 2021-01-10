@@ -1,3 +1,6 @@
+body{
+    transition: 0.5s;
+}
 #my-input-searchbox {
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
     font-size: 15px;
@@ -11,8 +14,8 @@
   }
 
 #map{
-    height: 60vh;
-    width: 70vw;
+    height: 75vh;
+    width: 75vw;
     border: 2px solid black;
     border-radius: 25px;
 }
@@ -51,3 +54,13 @@
 
 }
 
+ /* On smaller screens, where height is less than 768px, change the style of the sidenav (less padding and a smaller font size) */
+ @media screen and (max-width: 768px) {
+     #map{
+        height: 70vh;
+        width: 100%;
+        border: none;
+        margin: none;
+        padding: none;
+     }
+  }

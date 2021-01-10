@@ -1,5 +1,6 @@
-let current_lat = 1.352083;
-let current_lng = 103.819839;
+let current_lat = 1.2992724999999998;
+let current_lng = 103.855451;
+
 let map;
 
 let userPopUp;
@@ -88,8 +89,6 @@ locationButton.addEventListener("click", () => {
         current_lat = pos.lat;
         current_lng = pos.lng;
 
-        console.log(pos.lat, pos.lng)
-      
         map.flyTo({
           center: [pos.lng, pos.lat],
           zoom : 17
@@ -110,7 +109,6 @@ locationButton.addEventListener("click", () => {
           ) {
 
             var feature = response.body.features[0];
-            console.log(feature)
 
             clearPopupAndMarker();
             clearEverything();
@@ -162,8 +160,7 @@ geocoder.on('result', function(result) {
 
   current_lat = result.result.geometry.coordinates[1];
   current_lng = result.result.geometry.coordinates[0];
-  place_name = result.result.text;
-  console.log(place_name);
+  place_name = result.result.place_name;
 
   clearPopupAndMarker();
   clearEverything();
@@ -268,8 +265,6 @@ function navigateTo(placeInfo, eLat, eLng){
       var data = result.routes[0];
       var route = data.geometry.coordinates;
 
-      console.log(route)
-
       var geojson = {
         type: 'Feature',
         properties: {},
@@ -279,9 +274,7 @@ function navigateTo(placeInfo, eLat, eLng){
         }
       };
 
-      console.log(geojson);
-
-      // if the route already exists on the map, reset it using setData
+    // if the route already exists on the map, reset it using setData
     if (map.getSource('route')) {
    
       map.getSource('route').setData(geojson);

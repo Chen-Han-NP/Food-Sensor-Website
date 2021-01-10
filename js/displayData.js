@@ -11,10 +11,11 @@ function displayData(current_lat,current_lng){
     var from = [current_lng, current_lat];
 
     //The bounds list stores a rectangle area that restrict the search area.
-    var bounds = [current_lng-0.004, current_lat-0.004, current_lng+0.004, current_lat+0.004]
+    var bounds = [current_lng-0.005, current_lat-0.005, current_lng+0.005, current_lat+0.005]
 
     //Request to the geocoding API to find the 10 nearest restaurants within the bounds of the current location.
     const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/restaurant.json?types=poi&proximity=${current_lng},${current_lat}&bbox=${bounds[0]},${bounds[1]},${bounds[2]},${bounds[3]}&country=SG&limit=10&access_token=${accessToken}`
+    
     fetch(url)
     .then(response => response.json())
     .then(function (data){
@@ -76,7 +77,6 @@ function displayData(current_lat,current_lng){
 
             var distance = result.properties.distance;
             var duration = result.properties.duration;
-            console.log(distance, duration);
 
             var place_info = result.place_name;
             var place_info = place_info.replace("'","");
@@ -88,43 +88,9 @@ function displayData(current_lat,current_lng){
             $('#sidebarContent').append(`<p class='restaurant_dist'> Distance: ${distance}m</p>`)
             $('#sidebarContent').append(`<p class='restaurant_dist'> Esti. Duration: : ${duration}m</p>`)
             $('#sidebarContent').append(`<a class='restaurant_add' href="javascript:void(0)" onclick="navigateTo(\'${place_info}\' ,${result_lat}, ${result_lng})"> <u>${result.properties.address} </u></a>`)
-            
-            //create a popup
-
-
-            
-        }
-        
-        
-        
-        
+                 
+            }
         }, 500);
-
-        
-      
-          
-        
-       
-        
-
-
-        
-
     });
 }
 
-/*
-async function getDistance(access_token, from, to){
-    var url =  `https://api.mapbox.com/directions/v5/mapbox/walking/${from[0]},${from[1]};${to[0]},${to[1]}?access_token=${access_token}`
-    return await fetch(url)
-    .then(response => response.json())
-    .then(function (data){
-        var distance = Math.round(data.routes[0].distance,0);
-        var walkingTime = Math.round(data.routes[0].duration / 60, 0);
-        //console.log("Data: ", data);
-        //console.log("Distance search: ", distance, walkingTime);
-        return [distance, walkingTime];
-    });
-
-}
-*/

@@ -1,7 +1,6 @@
 ## Website Name: Food Sensor
 
-## GitHub Repo: https://github.com/Chen-Han-NP/ID_S10202961_Chen-Han_Assg2_Website.git/
-## GitHub Page Link: https://chen-han-np.github.io/ID_S10202961_Chen-Han_Assg2_Website/
+## GitHub Page Link: https://chen-han-np.github.io/Food_Sensor_Website/
 
 
 ## Description:

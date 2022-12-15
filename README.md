@@ -1,7 +1,7 @@
-## Website Name: Food Sensor
+## ID Assignment 2 - Food Sensor Website
+## GitHub Page Link: https://chen-han-np.github.io/Food-Sensor-Website/
 
-## GitHub Page Link: https://chen-han-np.github.io/Food_Sensor_Website/
-
+<img width="1440" alt="Screenshot 2022-12-15 at 11 34 25 AM" src="https://user-images.githubusercontent.com/73086331/207766448-f40b7047-2933-4c62-a76c-d4c4c48299ca.png">
 
 ## Description:
 Food Sensor is a website that calls on Mapbox API and in-built HTML API that allow the user to locate their
